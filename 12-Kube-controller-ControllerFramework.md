@@ -226,7 +226,7 @@ Run/RunUntil starts a watch and handles watch events. Will restart the watch if 
 	rm.podController = podInformer.GetController()
 
 
-顺便看一下`sharedIndexInformer。Run()`方法：
+顺便看一下`sharedIndexInformer.Run()`方法：
 
 	func (s *sharedIndexInformer) Run(stopCh <-chan struct{}) {
 		defer utilruntime.HandleCrash()

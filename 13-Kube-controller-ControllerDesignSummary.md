@@ -1,1 +1,0 @@
-12 Kube-controller-Event-Broadcaster-Informer
