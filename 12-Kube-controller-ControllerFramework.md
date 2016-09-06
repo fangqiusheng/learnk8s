@@ -589,5 +589,5 @@ shared_informer可理解为公有的控制器，详见12.3节第2部分rcControl
  - **OnUpdate** is called when an object is modified. Note that oldObj is the last known state of the object-- it is possible that several changes were combined together, so you can't use this to see every single change. OnUpdate is also called when a re-list happens, and it will
    get called even if nothing changed. This is useful for periodically
      evaluating or syncing something.
-- **OnDelete** will get the final state of the item if it is known, otherwise
+ - **OnDelete** will get the final state of the item if it is known, otherwise
       it will get an object of type cache.DeletedFinalStateUnknown. This can happen if the watch is closed and misses the delete event and we don't notice the deletion until the subsequent re-list.
