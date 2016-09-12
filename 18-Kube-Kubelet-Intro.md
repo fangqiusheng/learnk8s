@@ -7,7 +7,8 @@ The kubelet is the primary “node agent” that runs on each node. The kubelet 
 
 - **File**: Path passed as a flag on the command line. This file is rechecked every 20 seconds (configurable with a flag).
 - **HTTP endpoint**: HTTP endpoint passed as a parameter on the command line. This endpoint is checked every 20 seconds (also configurable with a flag).
-- **HTTP server**: The kubelet can also listen for HTTP and respond to a simple API (underspec’d currently) to submit a new manifest.
+- **HTTP server**: The kubelet can also listen for HTTP and respond to a simple API (underspec’d currently) to submit a new 
+- .
 
 从上述描述中我们可以看到，kubelet是在集群中每个node上都必须存在的组件，负责维护管理pod。它的工作主要基于四种source—— apiserver的PodSpec，File，HTTP endpoint及HTTP server——来更新pod。其中，File通过 --file-check-frequency 参数传入， HTTP通过 --http-check-frequency 参数。
 
