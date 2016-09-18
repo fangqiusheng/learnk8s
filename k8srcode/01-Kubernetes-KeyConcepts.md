@@ -40,7 +40,7 @@ kubectl是和Kubernetes API交互的命令行程序。现在介绍一些核心�
 - Node（节点）
 - Kubernetes Master（Kubernetes主节点）
 
-### 1.2.2 Pod ### 
+### 1.2.2 Pod 
 
 Pod（上图绿色方框）安排在节点上，包含一组容器和卷。同一个Pod里的容器共享同一个网络命名空间，可以使用localhost互相通信。Pod是短暂的，不是持续性实体。你可能会有这些问题：
 
@@ -68,7 +68,7 @@ Replication Controller使用预先定义的pod模板创建pods，一旦创建成
 
 - **Rescheduling**: 如上所述，Replication Controller会确保Kubernetes集群中指定的pod副本(replicas)在运行， 即使在节点出错时。
 - **Scaling**: 通过修改Replication Controller的副本(replicas)数量来水平扩展或者缩小运行的pods。
-- **Rolling** updates:Replication Controller的设计原则使得可以一个一个地替换pods来滚动更新（rolling updates）服务。
+- **Rolling updates**:Replication Controller的设计原则使得可以一个一个地替换pods来滚动更新（rolling updates）服务。
 - **Multiple release tracks**: 如果需要在系统中运行multiple release的服务，Replication Controller使用labels来区分multiple release tracks。
 
 
@@ -90,11 +90,13 @@ Service是定义一系列Pod以及访问这些Pod的策略的一层抽象。Serv
 会为Service创建一个本地集群的DNS入口，因此前端Pod只需要DNS查找主机名为 ‘backend-service’，就能够解析出前端应用程序可用的IP地址。
 现在前端已经得到了后台服务的IP地址，但是它应该访问2个后台Pod的哪一个呢？Service在这2个后台Pod之间提供透明的负载均衡，会将请求分发给其中的任意一个（如下面的动画所示）。通过每个Node上运行的代理（kube-proxy）完成。这里有更多技术细节。
 
-下述动画展示了Service的功能。注意该图作了很多简化。如果不进入网络配置，那么达到透明的负载均衡目标所涉及的底层网络和路由相对先进。如果有兴趣，这里有更深入的介绍。
+下述动画展示了Service的功能。
 ![](imgs/kubernetes_service.gif)
 
 有一个特别类型的Kubernetes Service，称为'LoadBalancer'，作为外部负载均衡器使用，在一定数量的Pod之间均衡流量。比如，对于负载均衡Web流量很有用。
 
+
+### 1.2.6 Endpoint ###
 
 
 ## 1.3 Kubernetes构件 ##
@@ -120,7 +122,7 @@ Master定义了Kubernetes 集群Master/API Server的主要声明，包括Pod Reg
 
 #### 1.3.1.1 Minion Registry ####
 
-Minion Registry负责跟踪Kubernetes 集群中有多少Minion(Host)。Kubernetes封装Minion Registry成实现Kubernetes API Server的RESTful API接口REST，通过这些API，我们可以对Minion Registry做Create、Get、List、Delete操作，由于Minon只能被创建或删除，所以不支持Update操作，并把Minion的相关配置信息存储到etcd。除此之外，Scheduler算法根据Minion的资源容量来确定是否将新建Pod分发到该Minion节点。
+Minion Registry负责跟踪Kubernetes 集群中有多少Minion(Node)。Kubernetes封装Minion Registry成实现Kubernetes API Server的RESTful API接口REST，通过这些API，我们可以对Minion Registry做Create、Get、List、Delete操作，由于Minon只能被创建或删除，所以不支持Update操作，并把Minion的相关配置信息存储到etcd。除此之外，Scheduler算法根据Minion的资源容量来确定是否将新建Pod分发到该Minion节点。
 
 可以通过`curl http://{master-apiserver-ip}:4001/v2/keys/registry/minions/`来验证etcd中存储的内容。
 
@@ -172,7 +174,7 @@ Scheduler收集和分析当前Kubernetes集群中所有Minion节点的资源(内
 - 检测Pod的容器健康状态信息
 - 在容器中运行命令
 
-### 1.3.3 Proxy ###
+### 1.3.3 Kube-Proxy 和 Cluster IP ###
 
 Proxy是为了解决外部网络能够访问跨机器集群中容器提供的应用服务而设计的，运行在每个Minion上。Proxy提供TCP/UDP sockets的proxy，每创建一种Service，Proxy主要从etcd获取Services和Endpoints的配置信息（也可以从file获取），然后根据配置信息在Minion上启动一个Proxy的进程并监听相应的服务端口，当外部请求发生时，Proxy会根据Load Balancer将请求分发到后端正确的容器处理。
 
