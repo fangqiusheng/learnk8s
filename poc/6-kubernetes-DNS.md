@@ -36,7 +36,8 @@ skydns-rc.yaml和skydns-svc.yaml已上传至GiltLab。
 
 修改/etc/kubernetes/kunelet配置文件，并添加kubelet运行参数KUBELET_ARGS：
 
-	KUBELET_ARGS="--cluster_dns=10.254.0.99 --cluster_domain=cluster.local"
+	#  vi /etc/kubernetes/kubelet
+	   KUBELET_ARGS="--cluster_dns=10.254.0.99 --cluster_domain=cluster.local"
 
 其中：
 

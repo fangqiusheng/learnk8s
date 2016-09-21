@@ -1,0 +1,5 @@
+[elk]
+name=elk
+baseurl=http://172.17.254.218/elk-repo/
+enabled=1
+gpgcheck=0

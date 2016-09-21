@@ -1,0 +1,11 @@
+[foreman]
+name=Foreman 1.10
+baseurl=http://172.17.141.161:44444/repo/tfm/releases/1.10/el7/$basearch
+enabled=1
+gpgcheck=0
+
+[foreman-source]
+name=Foreman 1.10 - source
+baseurl=http://172.17.141.161:44444/repo/tfm/releases/1.10/el7/source
+enabled=1
+gpgcheck=0

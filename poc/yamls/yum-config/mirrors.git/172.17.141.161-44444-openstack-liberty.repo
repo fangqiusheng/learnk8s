@@ -1,0 +1,5 @@
+[openstack-liberty]
+name=OpenStack Liberty Repository
+baseurl=http://172.17.141.161:44444/repo/centos/$releasever/cloud/$basearch/openstack-liberty/
+gpgcheck=0
+priority=97

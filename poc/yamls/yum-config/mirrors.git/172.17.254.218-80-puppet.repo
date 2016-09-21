@@ -1,0 +1,11 @@
+[puppetlabs-dependencies]
+name=puppetlabdsdependencies
+baseurl=http://172.17.254.218/puppet-repo/
+gpgcheck=0
+priority=1
+
+[puppetlabs]
+name=puppetlabs
+baseurl=http://172.17.254.218/puppet-repo/
+gpgcheck=0
+priority=1

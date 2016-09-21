@@ -1,0 +1,9 @@
+[ceph]
+name=ceph
+baseurl=http://172.17.141.161:44444/repo/ceph/rpm-jewel/el7/x86_64/
+gpgcheck=0
+
+[ceph-noarch]
+name=cephnoarch
+baseurl=http://172.17.141.161:44444/repo/ceph/rpm-jewel/el7/noarch/
+gpgcheck=0
