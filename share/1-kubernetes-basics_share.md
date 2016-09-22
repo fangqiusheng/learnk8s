@@ -431,7 +431,7 @@ kubernetes通过kube-apiserver作为整个集群管理的入口。Apiserver是�
 Apiserver实现了一套RESTfull的接口，用户可以直接使用API同Apiserver交互。例如可以基于Java语言开发的开发项目OSGI或Fabric8，使用Java程序访问Kubernetes。事实上，kubectl命令也是通过和APIServer交互实现管理Kubernetes集群的目的。
 
 ## 1.5 基本安装步骤 ##
-详见POC文档，“CentOS 7 Kubernetes 安装指南”
+详见POC文档，“CentOS 7 Kubernetes 安装指南” [http://172.17.249.122/qsfang/learnk8s/blob/master/poc/1-Kubernetes-InstallGuide-CentOS7.2.md](http://172.17.249.122/qsfang/learnk8s/blob/master/poc/1-Kubernetes-InstallGuide-CentOS7.2.md)
 ## 1.6 使用演示 ##
 
 - 演示一： Guestbook-Example
