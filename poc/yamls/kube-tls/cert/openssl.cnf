@@ -203,15 +203,6 @@ authorityKeyIdentifier=keyid,issuer
 # deprecated according to PKIX.
 # subjectAltName=email:move
 
-subjectAltName = @alt_names
-[alt_names]
-DNS.1 = kubernetes
-DNS.2 = kubernetes.default
-DNS.3 = kubernetes.default.svc
-DNS.4 = kubernetes.default.svc.cluster.local
-IP.1 = 172.21.101.102  # kubernetes server ip
-#IP.2 = ${MASTER_HOST}     # master ip(如果都在一台机器上写一个就行)
-
 
 # Copy subject details
 # issuerAltName=issuer:copy
@@ -232,6 +223,17 @@ IP.1 = 172.21.101.102  # kubernetes server ip
 
 basicConstraints = CA:FALSE
 keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = kubernetes
+DNS.2 = kubernetes.default
+DNS.3 = kubernetes.default.svc
+DNS.4 = kubernetes.default.svc.cluster.local
+DNS.5 = master
+#IP.1 = 172.21.101.102  # # master ip(如果都在一台机器上写一个就行)
+IP.1 = 10.254.0.1  # kubernetes server ip
+IP.2 = 172.21.101.102  # # master ip(如果都在一台机器上写一个就行)
 
 [ v3_ca ]
 

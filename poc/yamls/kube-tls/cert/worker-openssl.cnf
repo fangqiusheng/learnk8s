@@ -203,10 +203,6 @@ authorityKeyIdentifier=keyid,issuer
 # deprecated according to PKIX.
 # subjectAltName=email:move
 
-subjectAltName = @alt_names
-[alt_names]
-IP.1 = 172.21.101.103 # 此处填写 node 的内网 ip，多个 node ip 地址以此类推 IP.2 = NODE2-IP
-IP.2 = 172.21.101.104 # 此处填写 node 的内网 ip，多个 node ip 地址以此类推 IP.2 = NODE2-IP
 
 # Copy subject details
 # issuerAltName=issuer:copy
@@ -227,6 +223,16 @@ IP.2 = 172.21.101.104 # 此处填写 node 的内网 ip，多个 node ip 地址�
 
 basicConstraints = CA:FALSE
 keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = node1
+DNS.2 = node2
+IP.1 = 172.21.101.103 # 此处填写 node 的内网 ip，多个 node ip 地址以此类推 IP.2 = NODE2-IP
+IP.2 = 172.21.101.104 # 此处填写 node 的内网 ip，多个 node ip 地址以此类推 IP.2 = NODE2-IP
+
+
+
 
 [ v3_ca ]
 

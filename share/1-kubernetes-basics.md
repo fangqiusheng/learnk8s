@@ -275,19 +275,19 @@ Kubernetes支持两种对外服务的Service的type定义：Nodeport和LoadBalan
 		        	"ports": [
 		            	{
 		               	 	"protocol": "TCP",
-		               	 	"port": 80,                  //service port
-		               	 	"targetPort": 9376,         //pod中某个容器的Port
-		                	"nodePort": 30061           //指定nodePort
+		               	 	"port": 80,                  #  service port， clusterIP：port,内部访问
+		               	 	"targetPort": 9376,       #  pod中某个容器的Port， Kube-proxy-->container
+		                	"nodePort": 30061           #  指定nodePort： NodeIP:nodePort,外部访问
 		            	}
 		        	],
-		        	"clusterIP": "10.0.171.239",        //指定clusterIP
-		        	"type": "LoadBalancer"             //指定对外服务类型为LoadBalancer方式            
+		        	"clusterIP": "10.0.171.239",        #  指定clusterIP
+		        	"type": "LoadBalancer"             #  指定对外服务类型为LoadBalancer方式            
 		    	},
 		    	"status": {
 		        	"loadBalancer": {
 		            	"ingress": [
 		                	{
-		                    	"ip": "146.148.47.155"  //指定LoadBalancer的IP地址
+		                    	"ip": "146.148.47.155"  #  指定LoadBalancer的IP地址
 		                	}
 		            	]
 		        	}
@@ -302,28 +302,140 @@ Kubenetes整体框架如下图，Kubernetes集群中的主机按功能划分为M
 
 **master**运行三个组件：
 
-- **apiserver：**作为kubernetes系统的入口，封装了核心对象的增删改查操作，以RESTFul接口方式提供给外部客户和内部组件调用。它维护的REST对象将持久化到etcd（一个分布式强一致性的key/value存储）。
-- **scheduler：**负责集群的资源调度，为新建的pod分配机器。这部分工作分出来变成一个组件，意味着可以很方便地替换成其他的调度器（plug-in）。
-- **controller-manager：**负责执行各种控制器。   
-	- **replication-controller：**定期关联replicationController和pod，保证replicationController定义的复制数量与实际运行pod的数量总是一致的。  
-	- Node-Controller, Service-Controller,endpoint-controller,ResourceQuota-Controller,NameSpace-Controller,ServiceAccount-Controller...
+- **apiserver**
+- **controller-manager**
+- **scheduler**
 
+**Node**(or minion)运行两个组件：
 
-**Node**(称作minion)运行两个组件：
-
-- **kubelet：**负责管控docker容器，如启动/停止、监控运行状态等。它会定期从etcd获取分配到本机的pod，并根据pod信息启动或停止相应的容器。同时，它也会接收apiserver的HTTP请求，汇报pod的运行状态。
-- **proxy：**负责为pod提供代理。它会定期从etcd获取所有的service，并根据service信息创建代理。当某个客户pod要访问其他pod时，访问请求会经过本机proxy做转发。
-
+- **kubelet**
+- **proxy**
 
 ### 1.3.1 API Server ###
+API Server作为kubernetes系统的入口，封装了核心对象的增删改查操作，以RESTFul接口方式提供给外部客户和内部组件调用。
 
-### 1.3.2 Scheduler ###
+**Kubernetes API Server功能：**
 
-### 1.3.3 controller-manager ###
+- Kubernetes中各种REST对象（如Pod、RC、Service、Namespace及Node等）的数据通过该API接口被提交到后端的持久化存储（etcd）中。
+- Kubernetes集群中的各部件之间通过该API接口交互，实现解耦合。
+- kubectl命令也是通过访问该API接口实现其强大的管理功能。
+
+**swagger-ui API在线查询功能：**
+
+Swagger UI是一款第三方REST API文档在线自动生成和功能测试软件。为了方便查阅API接口的详细定义，Kubernetes使用了swagger-ui提供API在线查询功能，Kubernetes开发团队会定期更新、生成UI及文档。访问方式有如下两种：
+
+- 官网：[http://kubernetes.io/third_party/swagger-ui/](http://kubernetes.io/third_party/swagger-ui/)
+- Master节点：[http://172.21.101.102:8080/swagger-ui/](http://172.21.101.102:8080/swagger-ui/)
+
+**API Server访问**：[http://172.21.101.102:8080/](http://172.21.101.102:8080/)
+
+
+### 1.3.2 controller-manager ###
+
+Controller Manager作为集群内部的管理控制中心，负责集群内的Node、Pod副本、服务端点（Endpoint）、命名空间（NameSpace）、服务账号（ServiceAccount）、资源定额（ResourceQuota)等的管理并执行自动修复流程，确保集群处于预期的工作状态。比如出现某个Node意外宕机时，Controller会在集群的其他节点上自动补齐Pod副本。
+
+Controller Manager内部主要包含以下控制器：
+
+- **Replication Controller:**确保在任何时候集群中一个RC所关联的Pod都保持一定数量的Pod副本处于正常运行状态。
+- **Node Controller:**负责发现、管理和监控集群中的各个Node节点。
+- **ResourceQuota Controller：**确保指定对象任何时候都不会超量占用系统资源、避免了由于某些业务进程的设计或实现的缺陷导致整个系统进行紊乱甚至意外宕机，对整个吸引的平稳运行和稳定性具有非常重要的作用。
+- **NameSpace Controller:**定时通过API Server读取NameSpace信息，并可根据API标识优雅删除NameSpace。
+- **ServiceAccount Controller:**安全相关控制器，在Controller Manager启动时被创建。监听Service Account的删除事件和NameSpace的创建修改事件。
+- **Token Controller：**安全相关控制器，负责监听Service Account和Secret的创建、修改和删除事件，并根据事件的不同做不同的处理。
+- **Service Controller:**负责监听Service的变化。
+- **Endpoint Controller:**通过Store缓存Service和Pod信息，它监控Service和Pod的变化。
+	
+Kubernetes集群中，每个Controller就是一个操作系统，它通过API Server监控系统的共享状态，并尝试着将系统状态从“现有状态”修正到“期望状态”。
+
+
+### 1.3.3 Scheduler ###
+
+Kubernetes Scheduler的作用是将带调度的Pod(API新创建的Pod、Controller Manager为补足副本而创建的Pod等)按照特定的调度算法和调度策略绑定（binding）到集群中的某个合适的Node上，并将绑定信息写入etcd中。
+
+在整个调度过程中涉及三个对象，分别是：
+
+- 待调度Pod列表
+- 可用Node列表
+- 调度算法和策略。
+
+Scheduler通过调度算法调度为待调度Pod列表的每个Pod从Node列表中选择一个最合适的Node。随后，目标节点上的Kubelet通过API Server监听到Kubernetes Scheduler产生的Pod绑定事件，然后获取相应的Pod清单，下载Image镜像，并启动容器。
+
+完整的流程如下图所示：
+
+![](imgs/kube-scheduler-workflow.JPG)
+
+Kubernetes Scheduler当前提供的默认调度流程分为以下两步：  
+（1）预选调度过程：即遍历所有目标Node，筛选出符合要求的候选节点。为此Kubernetes内置了多种预选策略（xxx Predicates）供用户选择。   
+（2）确定最优节点：在第一步的基础上，采用优选策略(xxx Priority)计算每个候选节点的积分，积分最高者胜出。
+
 
 ### 1.3.4 Kubelet ###
+Kubernetes集群中，每个Node节点上都会启动一个Kubelet服务进程。该进程用于处理Master节点下发到本节点的任务，管理Pod及Pod中的容器。每个Kubelet进程会在API Server上注册节点自身信息，定期向Master节点汇报节点资源的使用情况，并通过cAdvise监控容器和节点资源。
 
+Kubelet功能如下：
+
+- 节点管理：Kubelet在启动时通过API Server注册节点信息，并定时向API Server发送节点新消息，API Server在接收到这些信息后，将这些信息写入etcd。
+- Pod管理：Kubelet可以获取自身Node上所要运行的Pod清单；所有针对Pod的操作都会被Kubelet监听到。接收apiserver的HTTP请求，汇报pod的运行状态。
+- 容器健康检查： 
+	- LivenessProbe探针：用于判断容器是否健康，告诉Kubelet一个容器什么时候处于不健康的状态。
+	- ReadinessProbe探针：用于判断容器是否启动完成，且准备接受请求。
+- cAdvisor资源监控：开源的分析容器资源使用率和性能特性的代理工具，即监控agent。[http://172.21.101.103:4194](http://172.21.101.103:4194)
+
+### 1.3.5 Kube-Proxy ###
+
+KUbernetes集群中的每个Node上都运行一个Kube-Proxy进程。该kube-proxy进程：
+- 可以看做是一个Service的透明代理兼负载均衡器。
+- 核心功能是是将某个Service的访问转发到后端的多个Pod实例上。
+
+基本原理：
+
+- 对于每一个TCP类型的Kubernetes Service，kube-proxy都会在本地Node上建立一个Socket Server负责可接受请求，然后默认采用Round Robin负载均衡算法均匀发送到后端某个Pod上。
+- Kubernetes可以通过修改Service的service.spec.session.sessionAffinity参数的值实现回话保持特性的定向转发，如果设置的值为“ClientIP”，则将来自同一个ClientIP的请求都转发到同一个后端Pod上。
+
+**实例原理讲解：**
+
+- **实例1：内部服务访问-<cluster ip>:port**
+
+![](imgs/kube-proxy-clusterIP+port.png)
+
+- **实例2：外部服务访问-<node ip>:nodePort**
+
+![](imgs/kube-proxy-NodePort.png)
 
 ## 1.4 工作方式 ##
+
+![](imgs/k8s-slavemaster.jpg)
+
+### 1.4.1 kubectl命令行 ###
+
+kubectl是KUbernetes提供的命令行工具(CLI)，用于可直接通过kubectl以命令行的方式同集群交互。
+
+常用命令包括：
+
+-  `kubectl --help`：可获得命令的帮助信息
+-  `kubectl get `: get命令用于获取集群的一个或一些resource信息
+-  `kubectl describe`: describe获得的是resource集群相关的信息
+-  `kubectl create`: 用于根据文件或输入创建集群resource
+-  `kubectl replace`: 用于对已有资源进行更新、替换
+-  `kubectl patch`: 在容器运行时，直接对容器进行修改
+-  `kubectl delete`: 根据resource名或label删除resource
+-  `kubectl logs `: 用于显示pod运行中，容器内程序输出到标准输出的内容
+-  `kubectl rolling-update`: 已经部署并且正在运行的业务的滚动升级
+-  `kubectl scale`: 用于程序在负载加重或缩小时副本进行扩容或缩小
+-  ...
+
+**1.4.2 直接使用APIServer交互**
+
+kubernetes通过kube-apiserver作为整个集群管理的入口。Apiserver是整个集群的主管理节点，用户通过Apiserver配置和组织集群，同时集群中各个节点同etcd存储的交互也是通过Apiserver进行交互。
+
+Apiserver实现了一套RESTfull的接口，用户可以直接使用API同Apiserver交互。例如可以基于Java语言开发的开发项目OSGI或Fabric8，使用Java程序访问Kubernetes。事实上，kubectl命令也是通过和APIServer交互实现管理Kubernetes集群的目的。
+
 ## 1.5 基本安装步骤 ##
+详见POC文档，“CentOS 7 Kubernetes 安装指南”
 ## 1.6 使用演示 ##
+
+- 演示一： Guestbook-Example
+- 演示二： Kubernetes Dashboard
+- 演示三： Kubernetes DNS
+- 演示四： Kubernetes 集群监控
+- 演示五： KUbernetes 日志监控

@@ -11,7 +11,7 @@ Kubernetes开发人员认为，任何成功的系统都会经历一个不断成�
 
 为了方便查阅API接口的详细定义，Kubernetes使用了swagger-ui提供API在线查询功能，其官网为[http://kubernetes.io/third_party/swagger-ui/](http://kubernetes.io/third_party/swagger-ui/)，Kubernetes开发团队会定期更新、生成UI及文档。Swagger UI是一款REST API文档在线自动生成和功能测试软件，关于Swagger的内容请访问官网[http://swagger.io](http://swagger.io)。
 
-运行在Master节点上的API Server进程同时提供了swagger-ui的访问地址：http://: /swagger-ui/。假设我们的API Server安装在192.168.1.128服务器上，绑定了8080端口，则可以通过访问[http://192.168.1.128:8080/swagger-ui/](http://192.168.1.128:8080/swagger-ui/)来查看API信息，如图9-1所示。
+运行在Master节点上的API Server进程同时提供了swagger-ui的访问地址：http://master:/swagger-ui/。假设我们的API Server安装在192.168.1.128服务器上，绑定了8080端口，则可以通过访问[http://192.168.1.128:8080/swagger-ui/](http://192.168.1.128:8080/swagger-ui/)来查看API信息，如图9-1所示。
 
 ![](imgs/kube-apiserver-APISwaggerUI-1.png)  
 图9-1 swagger-ui

@@ -60,7 +60,7 @@ Kubelet读取监听到的信息，如果是创建和修改Pod任务，则做如�
 Pod通过两类探针来检查容器的健康状态。
 
 - LivenessProbe探针，用于判断容器是否健康，告诉Kubelet一个容器什么时候处于不健康的状态。如果LivenessProbe探针探测到容器不健康，则Kubelet将删除该容器，并根据容器的重启策略做相应的处理。如果一个容器不包含LivenessProbe探针，那么Kubelet认为该容器LivenessProbe探针返回的值永远是“Success”；
-- ReadinessProbe探针：用于潘丹容器是否启动完成，且准备接受请求。如果ReadinessProbe探针检测到失败，则Pod状态将被修改。Endpoint Controller将从Service的Endpoint中删除包含该容器所在Pod的IP地址的Endpoint条目。
+- ReadinessProbe探针：用于判断容器是否启动完成，且准备接受请求。如果ReadinessProbe探针检测到失败，则Pod状态将被修改。Endpoint Controller将从Service的Endpoint中删除包含该容器所在Pod的IP地址的Endpoint条目。
 
 Kubelet定期调用容器中的LivenessProbe探针来诊断容器的健康状况。LivenessProbe包含以下三种实现方式：
 

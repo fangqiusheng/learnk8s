@@ -3,7 +3,7 @@
 ## 14.1 Kubernetes Scheduler 工作流程 ##
 本节对Kubernetes中负责Pod调度的重要功能模块--Kubernetes Scheduler的工作原理和运行机制做深入分析。Kebernetes Scheduler在整个系统中承担了“承上启下”的重要功能，“承上”是指它负责接收Controller Manager创建的新Pod，为其安排一个落脚的“家”--目标Node，“启下”是指安置工作完成后，目标Node上的Kubelet服务进程接管后续工作，负责Pod生命周期的“下半生”。
 
-具体来说，Kubernetes Scheduler的作用是将带调度的Pod(API新创建的Pod、COntroller Manager为补足副本而创建的Pod等)按照特定的调度算法和调度策略绑定（binding）到集群中的某个合适的Node上，并将绑定信息写入etcd中。在整个调度过程中涉及三个对象，分别是：待调度Pod列表、可用Node列表及调度算法和策略。简单地说，就是通过调度算法调度为待调度Pod列表的每个Pod从Node列表中选择一个最合适的Node。随后，目标节点上的Kubelet通过API Server监听到Kubernetes Scheduler产生的Pod绑定事件，然后获取相应的Pod清单，下载Image镜像，并启动容器。
+具体来说，Kubernetes Scheduler的作用是将带调度的Pod(API新创建的Pod、Controller Manager为补足副本而创建的Pod等)按照特定的调度算法和调度策略绑定（binding）到集群中的某个合适的Node上，并将绑定信息写入etcd中。在整个调度过程中涉及三个对象，分别是：待调度Pod列表、可用Node列表及调度算法和策略。简单地说，就是通过调度算法调度为待调度Pod列表的每个Pod从Node列表中选择一个最合适的Node。随后，目标节点上的Kubelet通过API Server监听到Kubernetes Scheduler产生的Pod绑定事件，然后获取相应的Pod清单，下载Image镜像，并启动容器。
 
 完整的流程如下图14-1所示：
 

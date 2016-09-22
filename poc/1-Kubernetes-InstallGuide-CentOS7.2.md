@@ -54,7 +54,7 @@
 		// ectd安装在本机上，否则应设为对应etcd服务host的IP地址，监听端口号2379
 		4. KUBE_ETCD_SERVERS="--etcd_servers=http://127.0.0.1:2379"
 		5. KUBE_SERVICE_ADDRESSES="--service-cluster-ip-range=10.254.0.0/16"
-		//删除KUBE_ADMISSION_CONTROL中的ServiceAccount，否则会报错
+		//未配置ServiceAccount。详细见kubernetes双向认证配置
 		6. KUBE_ADMISSION_CONTROL="--admission_control=NamespaceLifecycle,NamespaceExists,LimitRanger,SecurityContextDeny,ResourceQuota"
 		7. KUBE_API_ARGS=""
 4. 启动并enable Master节点上的etcd, kube-apiserver, kube-controller-manager 和 kube-scheduler，相应脚本如下:
