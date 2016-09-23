@@ -20,7 +20,7 @@ Kubernetes提供的DNS由以下三个组件组成：
 
 **1. 编写skydns ReplicationController和Service配置文件**
 
-skydns-rc.yaml和skydns-svc.yaml已上传至GiltLab。
+skydns-rc.yaml和skydns-svc.yaml已上传至GiltLab，[http://172.17.249.122/qsfang/learnk8s/tree/master/poc/yamls/kube-dns](http://172.17.249.122/qsfang/learnk8s/tree/master/poc/yamls/kube-dns)。
 
 其中需要修改的参数说明如下：
 

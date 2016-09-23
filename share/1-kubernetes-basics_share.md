@@ -424,18 +424,18 @@ kubectl是KUbernetes提供的命令行工具(CLI)，用于可直接通过kubectl
 -  `kubectl scale`: 用于程序在负载加重或缩小时副本进行扩容或缩小
 -  ...
 
-**1.4.2 直接使用APIServer交互**
+**1.4.2 直接使用API同APIServer交互**
 
 kubernetes通过kube-apiserver作为整个集群管理的入口。Apiserver是整个集群的主管理节点，用户通过Apiserver配置和组织集群，同时集群中各个节点同etcd存储的交互也是通过Apiserver进行交互。
 
-Apiserver实现了一套RESTfull的接口，用户可以直接使用API同Apiserver交互。例如可以基于Java语言开发的开发项目OSGI或Fabric8，使用Java程序访问Kubernetes。事实上，kubectl命令也是通过和APIServer交互实现管理Kubernetes集群的目的。
+Apiserver实现了一套RESTfull的接口，用户可以直接使用API同Apiserver交互。例如可以基于Java语言开发的开源项目OSGI或Fabric8，使用Java程序访问Kubernetes API。事实上，kubectl命令也是通过和APIServer交互实现管理Kubernetes集群的目的。
 
 ## 1.5 基本安装步骤 ##
 详见POC文档，“CentOS 7 Kubernetes 安装指南” [http://172.17.249.122/qsfang/learnk8s/blob/master/poc/1-Kubernetes-InstallGuide-CentOS7.2.md](http://172.17.249.122/qsfang/learnk8s/blob/master/poc/1-Kubernetes-InstallGuide-CentOS7.2.md)
 ## 1.6 使用演示 ##
 
-- 演示一： Guestbook-Example
-- 演示二： Kubernetes Dashboard
-- 演示三： Kubernetes DNS
-- 演示四： Kubernetes 集群监控
+- 演示一： Guestbook-Example [http://172.17.249.122/qsfang/learnk8s/blob/master/poc/2-kubernetes-GuestBook.md](http://172.17.249.122/qsfang/learnk8s/blob/master/poc/2-kubernetes-GuestBook.md)
+- 演示二： Kubernetes Dashboard [http://172.17.249.122/qsfang/learnk8s/blob/master/poc/7-kubernetes-Dashboard.md](http://172.17.249.122/qsfang/learnk8s/blob/master/poc/7-kubernetes-Dashboard.md)
+- 演示三： Kubernetes DNS  [http://172.17.249.122/qsfang/learnk8s/blob/master/poc/6-kubernetes-DNS.md](http://172.17.249.122/qsfang/learnk8s/blob/master/poc/6-kubernetes-DNS.md)
+- 演示四： Kubernetes 集群监控 [http://172.17.249.122/qsfang/learnk8s/blob/master/poc/8-kubernetes-ClusterMonitoring.md](http://172.17.249.122/qsfang/learnk8s/blob/master/poc/8-kubernetes-ClusterMonitoring.md)
 - 演示五： KUbernetes 日志监控

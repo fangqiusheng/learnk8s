@@ -19,7 +19,7 @@ kubernets部署dashboard，只需创建dashboard所需的Replication Controller�
 
 **1. 编写kube-dashboard ReplicationController和Service配置文件**
 
-kube-dashboard-rc.yaml和kube-dashboard-svc.yaml已上传至GiltLab。
+kube-dashboard-rc.yaml和kube-dashboard-svc.yaml已上传至GiltLab，[http://172.17.249.122/qsfang/learnk8s/tree/master/poc/yamls/kube-dashboard](http://172.17.249.122/qsfang/learnk8s/tree/master/poc/yamls/kube-dashboard)。
 
 其中`kube-dashboard-rc.yaml`需要修改的说明如下：
 

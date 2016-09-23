@@ -14,7 +14,7 @@
 
 ## 2.2 Guestbook Example ##
 
-
+所需配置文件已上传至GitLab:[http://172.17.249.122/qsfang/learnk8s/tree/master/poc/yamls/redis-guestbook](http://172.17.249.122/qsfang/learnk8s/tree/master/poc/yamls/redis-guestbook)
 ### 1. 创建redis-master Pod(RC) ###
 
 启动redis-master replication controller，并创建redis-master Pod：
