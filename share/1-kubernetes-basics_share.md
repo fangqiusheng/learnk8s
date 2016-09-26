@@ -438,4 +438,4 @@ Apiserver实现了一套RESTfull的接口，用户可以直接使用API同Apiser
 - 演示二： Kubernetes Dashboard [http://172.17.249.122/qsfang/learnk8s/blob/master/poc/7-kubernetes-Dashboard.md](http://172.17.249.122/qsfang/learnk8s/blob/master/poc/7-kubernetes-Dashboard.md)
 - 演示三： Kubernetes DNS  [http://172.17.249.122/qsfang/learnk8s/blob/master/poc/6-kubernetes-DNS.md](http://172.17.249.122/qsfang/learnk8s/blob/master/poc/6-kubernetes-DNS.md)
 - 演示四： Kubernetes 集群监控 [http://172.17.249.122/qsfang/learnk8s/blob/master/poc/8-kubernetes-ClusterMonitoring.md](http://172.17.249.122/qsfang/learnk8s/blob/master/poc/8-kubernetes-ClusterMonitoring.md)
-- 演示五： KUbernetes 日志监控
+- 演示五： KUbernetes 集群日志管理 [http://172.17.249.122/qsfang/learnk8s/blob/master/poc/10-kubernetes-Logging.md](http://172.17.249.122/qsfang/learnk8s/blob/master/poc/10-kubernetes-Logging.md)
