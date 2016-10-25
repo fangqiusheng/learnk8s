@@ -132,6 +132,6 @@ Discover 标签页用于交互式探索你的数据。
 
 - Kibana页面如下图所示：
 
-![](imgs/poc_logging_kibana.jpg)
+![](imgs/poc_logging_kibana.JPG)
 
 

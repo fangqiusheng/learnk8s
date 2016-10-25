@@ -1,0 +1,17 @@
+kind: NetworkPolicy
+apiVersion: extensions/v1beta1
+metadata:
+  name: access-dashboard
+  namespace: kube-system
+spec:
+  podSelector:
+    matchLabels:
+       k8s-app: kubernetes-dashboard
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            k8s-app: kubernetes-dashboard
+      ports:
+      - protocol: tcp
+        port: 9090
