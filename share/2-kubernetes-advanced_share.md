@@ -332,8 +332,8 @@ Flannel的设计目的就是为集群中的所有节点重新规划IP地址的�
 
 **2. Flannel工作原理**  
 Flannel实质上是一种“覆盖网络(overlay network)”，也就是将TCP数据包装在另一种网络包里面进行路由转发和通信，目前已经支持UDP、VxLAN、AWS VPC和GCE路由等数据转发方式。默认的节点间数据通信方式是UDP转发。
-  
-![](imgs\flannel.png)
+ 
+![](imgs/flannel.png)
 图2-1 Flannel网络架构
 
 Flannel框架如图2-1所示，数据从源容器中发出后，经由所在主机的docker0虚拟网卡转发到flannel0虚拟网卡，这是个P2P的虚拟网卡，flanneld服务监听在网卡的另外一端。
@@ -353,18 +353,18 @@ Flannel通过Etcd服务维护了一张节点间的路由表，Flannel通过Etcd�
 Calico是一个纯3层的数据中心网络方案，而且无缝集成像OpenStack这种IaaS云架构，能够提供可控的VM、容器、裸机之间的IP通信。
 
 通过将整个互联网的可扩展IP网络原则压缩到数据中心级别，Calico在每一个计算节点利用Linux Kernel实现了一个高效的vRouter来负责数据转发，而每个vRouter通过BGP协议负责把自己上运行的workload的路由信息像整个Calico网络内传播——小规模部署可以直接互联，大规模下可通过指定的BGP route reflector来完成。这样保证最终所有的workload之间的数据流量都是通过IP路由的方式完成互联的。
-![](imgs\calico-workload.png)
+![](imgs/calico-workload.png)
 图2-2 Calico workload路由信息传播示意图  
 Calico节点组网可以直接利用数据中心的网络结构（无论是L2或者L3），不需要额外的NAT，隧道或者Overlay Network。如下图所示，这样保证这个方案的简单可控，而且没有封包解包，节约CPU计算资源的同时，提高了整个网络的性能。 
 
-![](imgs\calico-packet.png)  
+![](imgs/calico-packet.png)  
 图2-3 Calico数据包结构
  
 此外，Calico基于iptables还提供了丰富而灵活的网络Policy，保证通过各个节点上的ACLs来提供Workload的多租户隔离、安全组以及其他可达性限制等功能。
 
 **2. Calico框架**
 
-![](imgs\calico-frame.png)  
+![](imgs/calico-frame.png)  
 图2-4 Calico框架
 
 结合图2-4，Calico的核心组件如下：
@@ -399,11 +399,11 @@ Calico的两个网络概念：
 
 这样，跨主机的容期间通信就建立起来了，而且整个数据流中没有NAT、隧道，不涉及封包
 
-![](imgs\calico-iprouting.png)  
+![](imgs/calico-iprouting.png)  
 图2-5 Calico IP路由原理  
 
 **Calico的ACLs Profile主要依靠iptables和ipset来完成，提供的是可针对每个容器级别的规则定义。**
-![](imgs\calico-acl.png)
+![](imgs/calico-acl.png)
 图2-6 Calico 安全策略ACL
 
 #### 2.2.4 Canal ####
