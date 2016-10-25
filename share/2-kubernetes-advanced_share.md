@@ -268,7 +268,8 @@ K8S的Ingress对象提供了另一种服务暴露的方法，通过虚拟主机�
 Ingress Controller通常和Loadbalancer一起用于执行Ingress的定义规则。
                                 
 Ingress的配置文件如下所示：
-														   
+	
+	#dashboard-ingress.yaml													   
 	apiVersion: extensions/v1beta1
 	kind: Ingress
 	metadata:
