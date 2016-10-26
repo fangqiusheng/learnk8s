@@ -296,6 +296,8 @@ Ingress 配置使用实例：[http://172.17.249.122/qsfang/learnk8s/blob/master/
 
 ## 2.2 Kubernetes网络 ##
 
+Docker 网络，参考[http://172.17.249.122/qsfang/learndocker/blob/master/dockerdocs/06-Docker%E7%BD%91%E7%BB%9C%E8%BF%9B%E9%98%B6.md](http://172.17.249.122/qsfang/learndocker/blob/master/dockerdocs/06-Docker%E7%BD%91%E7%BB%9C%E8%BF%9B%E9%98%B6.md)
+
 ### 2.2.1 Kubernetes网络模型 ###
 Kubernetes网络实现与Docker不同，其需要解决以下四个网络问题：
 
@@ -342,12 +344,12 @@ Flannel框架如图2-1所示，数据从源容器中发出后，经由所在主�
 
 Flannel通过Etcd服务维护了一张节点间的路由表，Flannel通过Etcd分配了每个节点可用的IP地址段后，修改了Docker的启动参数（“--bip=172.17.18.1/24”这个参数，它限制了所在节点容器获得的IP范围）。IP范围是由Flannel自动分配的，由Flannel通过保存在Etcd服务中的记录确保它们不会重复。 **IP分配还是Docker在做，Flannel只是分配了子网。** 
 
-**3. Flannel+Etcd配置**
+**3. Flanne安装配置**
 
 详细参考Kubernetes安装指南[http://172.17.249.122/qsfang/learnk8s/blob/master/poc/01-Kubernetes-InstallGuide-CentOS7.2.md](http://172.17.249.122/qsfang/learnk8s/blob/master/poc/01-Kubernetes-InstallGuide-CentOS7.2.md)
 
 
-#### 2.2.3 Calico  ####
+### 2.2.3 Calico
 
 **1. Calico简介**  
 Calico是一个纯3层的数据中心网络方案，而且无缝集成像OpenStack这种IaaS云架构，能够提供可控的VM、容器、裸机之间的IP通信。
@@ -375,11 +377,9 @@ Calico节点组网可以直接利用数据中心的网络结构（无论是L2或
 - **BGP Route Reflector（BIRD）：**大规模部署时使用，摒弃所有节点互联的 mesh 模式，通过一个或者多个BGP Route Reflector来完成集中式的路由分发；
 
 **3. Calico Network核心概念**  
-本文考虑Calico“站队” CNM，以Calico Docker libnetwork plugin的方式来体验和讨论Calico容器网络方案。  
-CNM包含Sandbox，Endpoint，Network。Calico还需要依赖另外两个关键的对象来完成Docker的网络管理功能，他们分别是：
 
-- **Network Controller**：对外提供分配及管理网络的APIs，Docker Libnetwork支持多个活动的网络driver，NetworkController允许绑定特定的driver到指定的网络；
-- **Driver：**网络驱动对用户而言是不直接交互的，它通过插件式的接入来提供最终网络功能的实现；Driver（包括IPAM）负责一个Network的管理，包括资源分配和回收。
+- **Network Controller**：对外提供分配及管理网络的APIs。
+- **Driver：**Driver（包括IPAM）负责一个Network的管理，包括资源分配和回收。
 
 Calico的两个网络概念：
 
@@ -393,11 +393,6 @@ Calico的两个网络概念：
 		Outbound rules:
 		1 allow
 
-如图6-7，Calico跨主机容器间通信的数据流如下：
-
-	container -> kernel -> host1 -> one or more hops -> host2 -> kernel -> container
-
-这样，跨主机的容期间通信就建立起来了，而且整个数据流中没有NAT、隧道，不涉及封包
 
 ![](imgs/calico-iprouting.png)  
 图2-5 Calico IP路由原理  
@@ -406,10 +401,14 @@ Calico的两个网络概念：
 ![](imgs/calico-acl.png)
 图2-6 Calico 安全策略ACL
 
-#### 2.2.4 Canal ####
+**4. Calico安装配置** 
+
+### 2.2.4 Canal  ###
+
+Flannel问题：第一个是要做封包的操作。第二个问题是每个主机上的容器是固定的，容器的不同主机之前的迁移必然带来IP的变化。
 
 
-## 2.2.5 NetworkPolicy  ##
+### 2.2.5 NetworkPolicy 
 
 - Namespace级别的隔离策略
 - network policy是一种Pod选择方式的描述，用于允许Pod之间及其与network endpoints之间的访问
