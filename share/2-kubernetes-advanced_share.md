@@ -2,7 +2,7 @@
 
 ## 2.1 Kubernetes基本概念扩展 ##
 
-Kubernetes管理的基本单元是Pod。下面详细介绍Kubernetes管理Pod的几种方式。
+Kubernetes管理的基本单元是Pod。下面详细介绍Kubernetes管理Pod的几种方式，分别对应不同的应用场景。
 
 ### 2.1.1 Deployment ###
 
@@ -403,20 +403,70 @@ Calico的两个网络概念：
 
 **4. Calico安装配置** 
 
-### 2.2.4 Canal  ###
+详细参考：
+[http://172.17.249.122/qsfang/learnk8s/blob/master/poc/12-Kubernetes-Calico-Network.md](http://172.17.249.122/qsfang/learnk8s/blob/master/poc/12-Kubernetes-Calico-Network.md)
 
-Flannel问题：第一个是要做封包的操作。第二个问题是每个主机上的容器是固定的，容器的不同主机之前的迁移必然带来IP的变化。
+### 2.2.4 NetworkPolicy 
 
-
-### 2.2.5 NetworkPolicy 
+NetworkPolicy定义了Pod之间及其与network endpoints之间的访问策略：
 
 - Namespace级别的隔离策略
-- network policy是一种Pod选择方式的描述，用于允许Pod之间及其与network endpoints之间的访问
 - network policy通过label选择允许访问的Pods（白名单），允许流量达到label指定的Pod
 - network policy需要calico-policy-controller控制器实现。
+
+![](imgs/policy-controller.jpg)
+
+**1、配置NameSpace隔离策略**
+
+K8s可以给每个namespace分别配置隔离策略：
+
+- 隔离策略一旦配置，会作用于该namespace中的所有Pods
+- 现在只支持针对inbound traffic(ingress)的隔离策略，ingress隔离类型如下：
+	- `DefaultDeny`:	 该namespace中的Pods只能本节点访问，其它Sources均不能访问
+
+Namespace的隔离策略可以通过对namespace添加注释（annotation）实现，命令如下：
+
+	#配置Namespace隔离策略
+	kubectl annotate ns kube-system "net.beta.kubernetes.io/network-policy={\"ingress\": {\"isolation\": \"DefaultDeny\"}}"
+    
+    # 查看Namespace详细信息
+    # kubectl get namespace kube-system -o yaml
+	apiVersion: v1
+	kind: Namespace
+	metadata:
+	  annotations:
+	    net.beta.kubernetes.io/network-policy: '{"ingress": {"isolation": "DefaultDeny"}}'
+	  creationTimestamp: 2016-09-29T18:45:24Z
+	  name: kube-system
+
+    # 取消Namespace隔离策略
+    kubectl annotate --overwrite ns kube-system "net.beta.kubernetes.io/network-policy={\"ingress\": {\"isolation\": \"\"}}"
+
+**2、Network Policy 资源**
+
+
+	apiVersion: extensions/v1beta1
+	kind: NetworkPolicy
+	metadata:
+	 name: test-network-policy
+	spec:
+	 podSelector:
+	  matchLabels:
+	    role: db
+	 ingress:
+	  - from:
+	     - podSelector:
+	        matchLabels:
+	         role: frontend
+	    ports:
+	     - protocol: tcp
+	       port: 6379
 
 
 ## 2.3 Kubernetes集群性能监控 ##
 
+详细参考： [http://172.17.249.122/qsfang/learnk8s/blob/master/poc/08-kubernetes-ClusterMonitoring.md](http://172.17.249.122/qsfang/learnk8s/blob/master/poc/08-kubernetes-ClusterMonitoring.md)
 
 ## 2.4 Kubernetes集群日志管理 ##
+
+详细参考：  [http://172.17.249.122/qsfang/learnk8s/blob/master/poc/10-kubernetes-Logging.md](http://172.17.249.122/qsfang/learnk8s/blob/master/poc/10-kubernetes-Logging.md)
